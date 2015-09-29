@@ -155,6 +155,8 @@ class Fluent::ElasticsearchOutput < Fluent::BufferedOutput
       meta = { "index" => {"_index" => target_index, "_type" => type_name} }
       if @id_key && record[@id_key]
         meta['index']['_id'] = record[@id_key]
+      else
+	meta['index']['_id'] = record.hash
       end
 
       if @parent_key && record[@parent_key]

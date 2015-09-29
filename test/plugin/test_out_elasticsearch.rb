@@ -372,21 +372,14 @@ class ElasticsearchOutput < Test::Unit::TestCase
     assert_equal(index_cmds[0]['index']['_id'], '42')
   end
 
-  def test_doesnt_add_id_key_if_missing_when_configured
+  def test_adds_id_key_as_hash_if_missing_when_configured
     driver.configure("id_key another_request_id\n")
     stub_elastic_ping
     stub_elastic
     driver.emit(sample_record)
     driver.run
-    assert(!index_cmds[0]['index'].has_key?('_id'))
-  end
-
-  def test_adds_id_key_when_not_configured
-    stub_elastic_ping
-    stub_elastic
-    driver.emit(sample_record)
-    driver.run
-    assert(!index_cmds[0]['index'].has_key?('_id'))
+    assert index_cmds[0]['index'].has_key?('_id')
+    assert_equal sample_record.hash, index_cmds[0]['index']['_id']
   end
 
   def test_adds_parent_key_when_configured
