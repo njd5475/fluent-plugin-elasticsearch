@@ -379,7 +379,7 @@ class ElasticsearchOutput < Test::Unit::TestCase
     driver.emit(sample_record)
     driver.run
     assert index_cmds[0]['index'].has_key?('_id')
-    assert_equal sample_record.hash, index_cmds[0]['index']['_id']
+    assert_equal sample_record.hash.to_s(24), index_cmds[0]['index']['_id']
   end
 
   def test_adds_parent_key_when_configured
